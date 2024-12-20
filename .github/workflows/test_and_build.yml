@@ -24,6 +24,7 @@ jobs:
   build-and-deploy:
     needs: test
     runs-on: ubuntu-latest
+    environment: Docker_hub  # Ajout de l'environnement configuré
     steps:
       - uses: actions/checkout@v3
 
@@ -31,9 +32,11 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}  
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/houses-prediction:latest .
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/houses-prediction:latest
+          docker build -t $DOCKERHUB_USERNAME/houses-prediction:latest .
+          docker push $DOCKERHUB_USERNAME/houses-prediction:latest

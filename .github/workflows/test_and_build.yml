@@ -20,7 +20,7 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest tests/test_model.py --junitxml=test-results.xml --html=test-report.html
+          pytest tests/test_model.py 
 
       - name: Upload test results XML
         if: always()

@@ -1,30 +1,9 @@
-import pytest
 import pandas as pd
-import os
-from sklearn.linear_model import LinearRegression
-
-@pytest.fixture
-def train_data():
-    data_path = os.path.join(os.path.dirname(__file__), '../mldash/houses.csv')
-    """Prépare les données d'entraînement"""
-    df = pd.read_csv(data_path)
-    # Filtrer les prix négatifs qui sont probablement des erreurs
-    df = df[df['price'] > 0]
-    X = df[['size', 'nb_rooms', 'garden']]
-    y = df['price']
-    return X, y
-
-@pytest.fixture
-def model(train_data):
-    """Crée et entraîne le modèle"""
-    X, y = train_data
-    model = LinearRegression()
-    model.fit(X, y)
-    return model
 
 def test_model_basic(train_data):
     """Test l'entraînement et les prédictions basiques"""
     X, y = train_data
+    from sklearn.linear_model import LinearRegression
     model = LinearRegression()
     model.fit(X, y)
     
@@ -62,7 +41,4 @@ def test_price_logic(model):
     
     assert large_price > small_price  # plus grand = plus cher
     assert garden_price > small_price  # jardin = plus cher
-    
-    # Prix min observé (hors négatifs) : ~222,231€
-    # Prix max observé : ~333,781€
     assert 222_000 <= small_price <= 334_000  # prix réalistes
